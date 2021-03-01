@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Lab3
 {
-    internal class Stack<T>
+    public class Stack<T>
     {
         private T[] array;
         private const int defaultSize = 32;
@@ -29,7 +29,7 @@ namespace Lab3
         private void Expand()
         {
             T[] newArray = new T[array.Length * 2];
-            Array.Copy(array, newArray, array.Length + 1);
+            Array.Copy(array, newArray, array.Length);
             array = newArray;
         }
 
