@@ -54,5 +54,14 @@ namespace Lab3
                 }
             }
         }
+
+        public static int RankedOperation(string op)
+        {
+            int a = 0;
+            if (op == "+" || op == "-") a = 1;
+            if (op == "*" || op == "/") a = 2;
+            if (op == "^") a = 3;
+            return a;
+        }
     }
 }
