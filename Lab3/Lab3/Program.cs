@@ -9,10 +9,8 @@ namespace Lab3
         static void Main(string[] args)
         {
             List<string> list = OperationForHelp.SplitOnToken(Console.ReadLine());
-            foreach (var VARIABLE in list)
-            {
-                Console.WriteLine(VARIABLE);
-            }
+            Calculator differentop = new Calculator();
+            Console.WriteLine(differentop.Calc(list));
         }
     }
 }
