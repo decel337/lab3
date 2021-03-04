@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System;
-using Lab3;
 namespace Lab3
 
 {
@@ -10,6 +9,7 @@ namespace Lab3
         {
             Stack<int> StackDigit = new Stack<int>();
             Stack<string> StackOperation = new Stack<string>();
+            OperationForHelp Helpcommands = new OperationForHelp();
             for (int i = 0; i < list.Count; i++)
             {
                 if (int.TryParse(list[i], out int a))
@@ -18,62 +18,27 @@ namespace Lab3
                 }
                 else
                 {
-                    if (StackOperation.Length == 0)
+                    if (StackOperation.Length == 0 || list[i] == "(" || Helpcommands.RankedOperation(list[i]) >
+                        Helpcommands.RankedOperation(StackOperation.Peek()))
                     {
                         StackOperation.Push(list[i]);
                     }
                     else
                     {
-                        if (OperationForHelp.RankedOperation(list[i]) >
-                              OperationForHelp.RankedOperation(StackOperation.Peek()))
+                        Helpcommands.DefaultSteps(StackDigit, StackOperation, list[i]);
+                        if (list[i] != ")")
                         {
-                            StackOperation.Push(list[i]);
-                        }
-                        else
-                        {
-                            while (StackOperation.Length!= 0 && OperationForHelp.RankedOperation(list[i]) <=
-                                OperationForHelp.RankedOperation(StackOperation.Peek()))
-                            {
-                                DefineOperation(StackOperation.Pop(), StackDigit);
-                            }
                             StackOperation.Push(list[i]);
                         }
                     }
                 }
+
+                if (i == list.Count - 1) 
+
+                    Helpcommands.DefaultSteps(StackDigit, StackOperation, list[i]);
             }
-            LastSteps(StackDigit, StackOperation);
+
             return StackDigit.Pop();
-        }
-
-        public static void DefineOperation(string op, Stack<int> StackDigit)
-        {
-            if (op == "+")
-                StackDigit.Push(StackDigit.Pop() + StackDigit.Pop());
-            if (op == "-")
-            {
-                StackDigit.Push(-StackDigit.Pop() + StackDigit.Pop());
-            }
-            if (op == "/")
-            {
-                int a = StackDigit.Pop();
-                int b = StackDigit.Pop();
-                StackDigit.Push(b/a);
-            }
-
-            if (op == "*")
-                StackDigit.Push(StackDigit.Pop() * StackDigit.Pop());
-            if (op == "^")
-            {
-                
-            }
-        }
-
-        public static void LastSteps(Stack<int> StackDigit, Stack<string> StackOperation)
-        {
-            while (StackOperation.Length != 0)
-            {
-                DefineOperation(StackOperation.Pop(), StackDigit);
-            }
         }
     }
 }

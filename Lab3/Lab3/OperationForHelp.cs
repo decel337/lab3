@@ -55,13 +55,50 @@ namespace Lab3
             }
         }
 
-        public static int RankedOperation(string op)
+        public int RankedOperation(string op)
         {
             int a = 0;
-            if (op == "+" || op == "-") a = 1;
+            if (op == "+" || op == "-" ) a = 1;
             if (op == "*" || op == "/") a = 2;
             if (op == "^") a = 3;
             return a;
+        }
+        public void DefaultSteps(Stack<int> StackDigit, Stack<string> StackOperation, string b)
+        {
+            while (StackOperation.Length != 0 && RankedOperation(b) <=
+                RankedOperation(StackOperation.Peek()))
+            {
+                if (b == ")" && StackOperation.Peek() == "(")
+                {
+                    DefineOperation(StackOperation.Pop(), StackDigit);
+                    break;
+                }
+                DefineOperation(StackOperation.Pop(), StackDigit);
+            }
+        }
+        public static void DefineOperation(string op, Stack<int> StackDigit)
+
+
+        {
+            if (op == "+")
+                StackDigit.Push(StackDigit.Pop() + StackDigit.Pop());
+            if (op == "-")
+                StackDigit.Push(-StackDigit.Pop() + StackDigit.Pop());
+            if (op == "/")
+            {
+                var a = StackDigit.Pop();
+                var b = StackDigit.Pop();
+                StackDigit.Push(b / a);
+            }
+
+            if (op == "*")
+                StackDigit.Push(StackDigit.Pop() * StackDigit.Pop());
+            if (op == "^")
+            {
+                var a = StackDigit.Pop();
+                var b = StackDigit.Pop();
+                StackDigit.Push(Convert.ToInt32(Math.Pow(b, a)));
+            }
         }
     }
 }
