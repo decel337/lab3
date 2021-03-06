@@ -28,7 +28,7 @@ namespace Lab3
                     TempString += str[i];
                 else
                 {
-                    throw new ArgumentException("UNVAILABLE OPERATION");
+                    throw new InvalidOperationException("UNVAILABLE OPERATION");
                 }
             }
             if(ListOfToken.Count != 0)
@@ -48,11 +48,27 @@ namespace Lab3
                     {
                         if (ListOfToken[i-1] == Operation[j] && ListOfToken[i] == Operation[k])
                         {
-                            throw new ArgumentException("UNVAILABLE OPERATION");
+                            throw new InvalidOperationException("UNVAILABLE OPERATION");
                         }
                     }
                 }
             }
+
+            int count = 0;
+            for (int i = 0; i < ListOfToken.Count; i++)
+            {
+                if (ListOfToken[i] == "(")
+                    count++;
+
+                if (ListOfToken[i] == ")")
+                    count--;
+
+                if (count < 0)
+                    throw new InvalidOperationException("UNVAILABLE OPERATION");
+            }
+
+            if (count != 0)
+                throw new InvalidOperationException("UNVAILABLE OPERATION");
         }
 
         public int RankedOperation(string op)
