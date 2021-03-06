@@ -19,7 +19,6 @@ namespace Lab3
         {
             string tempString = "";
             str = str.Replace(" ", "");
-            str += "-";
             List<string> listOfTokens = new List<string>();
 
             for (int i = 0; i < str.Length; i++)
@@ -43,8 +42,10 @@ namespace Lab3
                     throw new InvalidOperationException("UNAVAILABLE OPERATION");
                 }
             }
-            if(listOfTokens.Count != 0)
-                listOfTokens.RemoveAt(listOfTokens.Count - 1);
+            if(tempString != "")
+            {
+                listOfTokens.Add(tempString);
+            }
             FixedInput(listOfTokens);
             return listOfTokens;
         }
@@ -86,10 +87,10 @@ namespace Lab3
 
         public int RankedOperation(string op)
         {
-            return operators.ContainsKey(op) ? 0 : operators[op].precedence;
+            return !operators.ContainsKey(op) ? 0 : operators[op].precedence;
         }
 
-        public void DefaultSteps(Stack<int> StackDigit, Stack<string> StackOperation, string b)
+        public void DefaultSteps(Stack<float> StackDigit, Stack<string> StackOperation, string b)
         {
             while (StackOperation.Length != 0 && RankedOperation(b) <=
                 RankedOperation(StackOperation.Peek()))
@@ -103,16 +104,18 @@ namespace Lab3
             }
         }
 
-        public void DefineOperation(string op, Stack<int> StackDigit)
+        public void DefineOperation(string op, Stack<float> StackDigit)
         {
             if (op == "+")
                 StackDigit.Push(StackDigit.Pop() + StackDigit.Pop());
             else if (op == "-")
+            {
                 StackDigit.Push(-StackDigit.Pop() + StackDigit.Pop());
+            }
             else if (op == "/")
             {
-                var a = StackDigit.Pop();
-                var b = StackDigit.Pop();
+                float a = StackDigit.Pop();
+                float b = StackDigit.Pop();
                 StackDigit.Push(b / a);
             }
 
@@ -122,7 +125,7 @@ namespace Lab3
             {
                 var a = StackDigit.Pop();
                 var b = StackDigit.Pop();
-                StackDigit.Push(Convert.ToInt32(Math.Pow(b, a)));
+                StackDigit.Push(Convert.ToSingle(Math.Pow(b, a)));
             }
         }
     }

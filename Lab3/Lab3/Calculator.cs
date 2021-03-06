@@ -5,9 +5,9 @@ namespace Lab3
 {
     public class Calculator
     {
-        public int Calc(List<string> list)
+        public float Calc(List<string> list)
         {
-            Stack<int> StackDigit = new Stack<int>();
+            Stack<float> StackDigit = new Stack<float>();
             Stack<string> StackOperation = new Stack<string>();
             OperationsForHelp Helpcommands = new OperationsForHelp();
             for (int i = 0; i < list.Count; i++)
@@ -17,7 +17,14 @@ namespace Lab3
                     StackDigit.Push(a);
                 }
                 else
-                {
+                {   // handling unary minus
+                    if (list[i] == "-" && (i == 0 || list[i-1] == "("))
+                    {
+                        int.TryParse(list[i + 1], out int negative);
+                        StackDigit.Push(-negative);
+                        i++;
+                        continue;
+                    }
                     if (StackOperation.Length == 0 || list[i] == "(" || Helpcommands.RankedOperation(list[i]) >
                         Helpcommands.RankedOperation(StackOperation.Peek()))
                     {
@@ -32,12 +39,11 @@ namespace Lab3
                         }
                     }
                 }
-
-                if (i == list.Count - 1) 
-
-                    Helpcommands.DefaultSteps(StackDigit, StackOperation, list[i]);
             }
-
+            while (StackOperation.Length != 0)
+            {
+                Helpcommands.DefineOperation(StackOperation.Pop(), StackDigit);
+            }
             return StackDigit.Pop();
         }
     }
