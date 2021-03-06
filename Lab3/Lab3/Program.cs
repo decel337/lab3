@@ -8,7 +8,7 @@ namespace Lab3
     {
         static void Main(string[] args)
         {
-            List<string> list = OperationForHelp.SplitOnToken(Console.ReadLine());
+            List<string> list = new OperationsForHelp().SplitOnToken(Console.ReadLine());
             Calculator differentop = new Calculator();
             Console.WriteLine(differentop.Calc(list));
         }

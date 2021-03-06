@@ -9,7 +9,7 @@ namespace Lab3
         {
             Stack<int> StackDigit = new Stack<int>();
             Stack<string> StackOperation = new Stack<string>();
-            OperationForHelp Helpcommands = new OperationForHelp();
+            OperationsForHelp Helpcommands = new OperationsForHelp();
             for (int i = 0; i < list.Count; i++)
             {
                 if (int.TryParse(list[i], out int a))

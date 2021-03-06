@@ -4,51 +4,64 @@ using System.Linq;
 
 namespace Lab3
 {
-    public class OperationForHelp
+    public class OperationsForHelp
     {
-        public static List<string> SplitOnToken(string str)
+        private Dictionary<string, (int precedence, bool isLeftAssociative)> operators = 
+            new Dictionary<string, (int precedence, bool isLeftAssociative)>()
+            {
+                { "+", (1, true)},
+                { "-", (1, true)},
+                { "/", (2, true)},
+                { "*", (2, true)},
+                { "^", (3, false)},
+            };
+        public List<string> SplitOnToken(string str)
         {
-            string TempString = "";
+            string tempString = "";
             str = str.Replace(" ", "");
             str += "-";
-            List<string> ListOfToken = new List<string>();
+            List<string> listOfTokens = new List<string>();
 
             for (int i = 0; i < str.Length; i++)
             {
-                if (str[i] == '*' || str[i] == '/' || str[i] == '+' || str[i] == '-' || str[i] == '(' ||
-                    str[i] == ')' || str[i] == '^')
+                string curChar = str[i].ToString();
+                if (curChar == "(" || curChar == ")" || operators.ContainsKey(curChar))
                 {
-                    if (TempString != "")
-                        ListOfToken.Add(TempString);
-                    ListOfToken.Add(str[i].ToString());
-                    TempString = "";
+                    if (tempString != "")
+                    {
+                        listOfTokens.Add(tempString);
+                    }
+                    listOfTokens.Add(str[i].ToString());
+                    tempString = "";
                 }
-
                 else if (Char.IsDigit(str[i]))
-                    TempString += str[i];
+                {
+                    tempString += str[i];
+                }
                 else
                 {
-                    throw new InvalidOperationException("UNVAILABLE OPERATION");
+                    throw new InvalidOperationException("UNAVAILABLE OPERATION");
                 }
             }
-            if(ListOfToken.Count != 0)
-                ListOfToken.RemoveAt(ListOfToken.Count - 1);
-            FixedInput(ListOfToken);
-            return ListOfToken;
+            if(listOfTokens.Count != 0)
+                listOfTokens.RemoveAt(listOfTokens.Count - 1);
+            FixedInput(listOfTokens);
+            return listOfTokens;
         }
 
-        public static void FixedInput(List<string> ListOfToken)
+        public void FixedInput(List<string> ListOfToken)
         {
-            string[] Operation = new string[]{"+", "-", "/", "*"};
+            string[] operations = new string[operators.Count];
+            operators.Keys.CopyTo(operations, 0);
             for (int i = 1; i < ListOfToken.Count; i++)
             {
                 for (int j = 0; j < 4; j++)
                 {
                     for (int k = 0; k < 4; k++)
                     {
-                        if (ListOfToken[i-1] == Operation[j] && ListOfToken[i] == Operation[k])
+                        if (ListOfToken[i-1] == operations[j] && ListOfToken[i] == operations[k])
                         {
-                            throw new InvalidOperationException("UNVAILABLE OPERATION");
+                            throw new InvalidOperationException("UNAVAILABLE OPERATION");
                         }
                     }
                 }
@@ -64,21 +77,18 @@ namespace Lab3
                     count--;
 
                 if (count < 0)
-                    throw new InvalidOperationException("UNVAILABLE OPERATION");
+                    throw new InvalidOperationException("UNAVAILABLE OPERATION");
             }
 
             if (count != 0)
-                throw new InvalidOperationException("UNVAILABLE OPERATION");
+                throw new InvalidOperationException("UNAVAILABLE OPERATION");
         }
 
         public int RankedOperation(string op)
         {
-            int a = 0;
-            if (op == "+" || op == "-" ) a = 1;
-            if (op == "*" || op == "/") a = 2;
-            if (op == "^") a = 3;
-            return a;
+            return operators.ContainsKey(op) ? 0 : operators[op].precedence;
         }
+
         public void DefaultSteps(Stack<int> StackDigit, Stack<string> StackOperation, string b)
         {
             while (StackOperation.Length != 0 && RankedOperation(b) <=
@@ -92,24 +102,23 @@ namespace Lab3
                 DefineOperation(StackOperation.Pop(), StackDigit);
             }
         }
-        public static void DefineOperation(string op, Stack<int> StackDigit)
 
-
+        public void DefineOperation(string op, Stack<int> StackDigit)
         {
             if (op == "+")
                 StackDigit.Push(StackDigit.Pop() + StackDigit.Pop());
-            if (op == "-")
+            else if (op == "-")
                 StackDigit.Push(-StackDigit.Pop() + StackDigit.Pop());
-            if (op == "/")
+            else if (op == "/")
             {
                 var a = StackDigit.Pop();
                 var b = StackDigit.Pop();
                 StackDigit.Push(b / a);
             }
 
-            if (op == "*")
+            else if (op == "*")
                 StackDigit.Push(StackDigit.Pop() * StackDigit.Pop());
-            if (op == "^")
+            else if (op == "^")
             {
                 var a = StackDigit.Pop();
                 var b = StackDigit.Pop();
