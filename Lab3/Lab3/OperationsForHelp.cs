@@ -13,7 +13,8 @@ namespace Lab3
                 { "-", (1, true)},
                 { "/", (2, true)},
                 { "*", (2, true)},
-                { "^", (3, false)},
+                { "#", (3, true)}, // unary minus
+                { "^", (4, false)},
             };
         public List<string> SplitOnToken(string str)
         {
@@ -90,6 +91,11 @@ namespace Lab3
             return !operators.ContainsKey(op) ? 0 : operators[op].precedence;
         }
 
+        public bool IsLeftAssociative(string op)
+        {
+            return operators[op].isLeftAssociative;
+        }
+
         public void DefaultSteps(Stack<float> StackDigit, Stack<string> StackOperation, string b)
         {
             while (StackOperation.Length != 0 && RankedOperation(b) <=
@@ -111,6 +117,10 @@ namespace Lab3
             else if (op == "-")
             {
                 StackDigit.Push(-StackDigit.Pop() + StackDigit.Pop());
+            }
+            else if (op == "#")
+            {
+                StackDigit.Push(-StackDigit.Pop());
             }
             else if (op == "/")
             {

@@ -17,16 +17,25 @@ namespace Lab3
                     StackDigit.Push(a);
                 }
                 else
-                {   // handling unary minus
-                    if (list[i] == "-" && (i == 0 || list[i-1] == "("))
+                {
+                    //// handling unary minus
+                    //if (list[i] == "-" && (i == 0 || list[i-1] == "("))
+                    //{
+                    //    int.TryParse(list[i + 1], out int negative);
+                    //    StackDigit.Push(-negative);
+                    //    i++;
+                    //    continue;
+                    //}
+
+                    // handling unary minus
+                    if(list[i] == "-" && (i == 0 || list[i - 1] == "("))
                     {
-                        int.TryParse(list[i + 1], out int negative);
-                        StackDigit.Push(-negative);
-                        i++;
-                        continue;
+                        list[i] = "#";
                     }
                     if (StackOperation.Length == 0 || list[i] == "(" || Helpcommands.RankedOperation(list[i]) >
-                        Helpcommands.RankedOperation(StackOperation.Peek()))
+                        Helpcommands.RankedOperation(StackOperation.Peek())
+                        || (Helpcommands.RankedOperation(list[i]) == Helpcommands.RankedOperation(StackOperation.Peek()) &&
+                        !Helpcommands.IsLeftAssociative(list[i])))
                     {
                         StackOperation.Push(list[i]);
                     }
