@@ -25,7 +25,7 @@ namespace Lab3
             for (int i = 0; i < str.Length; i++)
             {
                 string curChar = str[i].ToString();
-                if (curChar == "(" || curChar == ")" || operators.ContainsKey(curChar))
+                if (curChar == "(" || curChar == "[" || curChar == ")" || curChar == "]" || operators.ContainsKey(curChar))
                 {
                     if (tempString != "")
                     {
@@ -69,20 +69,24 @@ namespace Lab3
                 }
             }
 
-            int count = 0;
+            int count1 = 0;
+            int count2 = 0;
             for (int i = 0; i < ListOfToken.Count; i++)
             {
                 if (ListOfToken[i] == "(")
-                    count++;
-
+                    count1++;
+                if (ListOfToken[i] == "[")
+                    count2++;
                 if (ListOfToken[i] == ")")
-                    count--;
-
-                if (count < 0)
+                    count1--;
+                if (ListOfToken[i] == "]")
+                    count2--;
+                if (count1 < 0 && count2 < 0 || count1 > 0 && ListOfToken[i] == "[")
                     throw new InvalidOperationException("UNAVAILABLE OPERATION");
             }
 
-            if (count != 0)
+
+            if (count1 != 0)
                 throw new InvalidOperationException("UNAVAILABLE OPERATION");
         }
 
@@ -101,7 +105,7 @@ namespace Lab3
             while (StackOperation.Length != 0 && RankedOperation(b) <=
                 RankedOperation(StackOperation.Peek()))
             {
-                if (b == ")" && StackOperation.Peek() == "(")
+                if (b == ")" && StackOperation.Peek() == "(" || b == "]" && StackOperation.Peek() == "[")
                 {
                     DefineOperation(StackOperation.Pop(), StackDigit);
                     break;

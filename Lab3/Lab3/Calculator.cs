@@ -28,11 +28,11 @@ namespace Lab3
                     //}
 
                     // handling unary minus
-                    if(list[i] == "-" && (i == 0 || list[i - 1] == "("))
+                    if(list[i] == "-" && (i == 0 || list[i - 1] == "(" || list[i - 1] == "["))
                     {
                         list[i] = "#";
                     }
-                    if (StackOperation.Length == 0 || list[i] == "(" || Helpcommands.RankedOperation(list[i]) >
+                    if (StackOperation.Length == 0 || list[i] == "(" || list[i] == "[" || Helpcommands.RankedOperation(list[i]) >
                         Helpcommands.RankedOperation(StackOperation.Peek())
                         || (Helpcommands.RankedOperation(list[i]) == Helpcommands.RankedOperation(StackOperation.Peek()) &&
                         !Helpcommands.IsLeftAssociative(list[i])))
@@ -42,7 +42,7 @@ namespace Lab3
                     else
                     {
                         Helpcommands.DefaultSteps(StackDigit, StackOperation, list[i]);
-                        if (list[i] != ")")
+                        if (list[i] != ")" || list[i] != "]")
                         {
                             StackOperation.Push(list[i]);
                         }
